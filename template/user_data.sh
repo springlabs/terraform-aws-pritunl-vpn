@@ -17,6 +17,7 @@ sudo yum install -y amazon-efs-utils
 sudo mkdir /mnt/efs
 echo "${efs_id}:/ /mnt/efs efs _netdev,noresvport,tls,iam 0 0" | sudo tee -a /etc/fstab
 sudo mount -a
+sudo mkdir /mnt/efs/mongo
 sudo tee /etc/yum.repos.d/mongodb-org-5.0.repo << EOF
 [mongodb-org-5.0]
 name=MongoDB Repository
@@ -38,8 +39,8 @@ gpg --armor --export 7568D9BB55FF9E5287D586017AE645C0CF8E292A > key.tmp;
 sudo rpm --import key.tmp; rm -f key.tmp
 sudo yum -y install pritunl mongodb-org
 
-sudo sed -i.bak "s/\/var\/lib\/mongo/\/mnt\/efs/g" /etc/mongod.conf
-sudo chown -R mongod:mongod /mnt/efs/
+sudo sed -i.bak "s/\/var\/lib\/mongo/\/mnt\/efs\/mongo/g" /etc/mongod.conf
+sudo chown -R mongod:mongod /mnt/efs/mongo/
 
 sudo systemctl start mongod pritunl
 sudo systemctl enable mongod pritunl
